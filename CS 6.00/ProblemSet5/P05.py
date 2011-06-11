@@ -82,7 +82,7 @@ def get_word_score(word, n):
     for letter in word:
         wordScore += SCRABBLE_LETTER_VALUES[letter]
     
-    ## for bonus jackpot
+    # for bonus jackpot
     if len(word) == n:
         wordScore +=50
 
@@ -249,17 +249,18 @@ def play_hand(hand, word_list):
     """
     # TO DO ...
     
-    ## Set/reset the score counter for current hand
+    # Set/reset the score counter for current hand
     scoreThisHand = 0
     
-    ## Display letters available in hand
+    # Display letters available in hand
     display_hand(hand)
 
     while len(hand) > 0:
-        ## User input word to play
+        # User input word to play
         word = input("Please enter the word to play:")
+        
         if word != '.': 
-            ## Check if the word is valid, re-enter if not
+            # Check if the word is valid, re-enter if not
             while is_valid_word(word, hand, word_list) == False:
                 print("The word", word, " you entered is invalid.")
                 word = input("Please re-enter another word:")
