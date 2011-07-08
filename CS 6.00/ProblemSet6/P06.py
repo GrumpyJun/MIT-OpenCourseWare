@@ -1,16 +1,21 @@
 # MIT OpenCourseWare - Online Education
 # CS 6.00 - Intro to Computer Science
-# Problem set 5
+# Problem set 6
 # Student: May Pongpitpitak
-# June 1, 2011
+# June 13, 2011
 
 
 import random
 import string
+import time
 
-VOWELS = 'aeiou'
-CONSONANTS = 'bcdfghjklmnpqrstvwxyz'
-HAND_SIZE = 7
+VOWELS      = 'aeiou'
+CONSONANTS  = 'bcdfghjklmnpqrstvwxyz'
+HAND_SIZE   = 7
+
+POINTS_DICT = {}        # The dictionary of words and points is created at the beginnning of the game
+TIME_LIMIT  = 0         # The time limit is either user input or calculate in the 'get_time_limit' function
+k = 5
 
 SCRABBLE_LETTER_VALUES = {
     'a': 1, 'b': 3, 'c': 3, 'd': 2, 'e': 1, 'f': 4, 'g': 2, 'h': 4, 'i': 1, 'j': 8, 'k': 5, 'l': 1, 'm': 3, 'n': 1, 'o': 1, 'p': 3, 'q': 10, 'r': 1, 's': 1, 't': 1, 'u': 1, 'v': 4, 'w': 4, 'x': 8, 'y': 4, 'z': 10
@@ -58,9 +63,7 @@ def get_frequency_dict(sequence):
 # (end of helper code)
 # -----------------------------------
 
-#
-# Problem #1: Scoring a word
-#
+
 def get_word_score(word, n):
     """
     Returns the score for a word. Assumes the word is a
@@ -88,9 +91,8 @@ def get_word_score(word, n):
 
     return(wordScore)
 
-#
-# Make sure you understand how this function works and what it does!
-#
+
+
 def display_hand(hand):
     """
     Displays the letters currently in the hand.
@@ -108,9 +110,7 @@ def display_hand(hand):
             print(letter, )            # print all on the same line
 
 
-#
-# Make sure you understand how this function works and what it does!
-#
+
 def deal_hand(n):
     """
     Returns a random hand containing n lowercase letters.
@@ -124,24 +124,21 @@ def deal_hand(n):
     returns: dictionary (string -> int)
     """
     
-    hand={}
-    num_vowels = int(n / 3)             # Given code not working, casted to int
+    hand        = {}
+    num_vowels  = int(n / 3)             # Given code not working, casted to int
     
     for i in range(num_vowels):
-        x = VOWELS[random.randrange(0,len(VOWELS))]
+        x       = VOWELS[random.randrange(0,len(VOWELS))]
         hand[x] = hand.get(x, 0) + 1
         
     for i in range(num_vowels, n):    
-        x = CONSONANTS[random.randrange(0,len(CONSONANTS))]
+        x       = CONSONANTS[random.randrange(0,len(CONSONANTS))]
         hand[x] = hand.get(x, 0) + 1
         
     return(hand)
 
 
 
-#
-# Problem #2: Update a hand by removing letters
-#
 def update_hand(hand, word):
     """
     Assumes that 'hand' has all the letters in word.
@@ -169,9 +166,6 @@ def update_hand(hand, word):
 
 
 
-#
-# Problem #3: Test word validity
-#
 def is_valid_word(word, hand, word_list):
     """
     Returns True if word is in the word_list and is entirely
@@ -194,9 +188,78 @@ def is_valid_word(word, hand, word_list):
 
 
 
+# -----------------------------------------------------------------------------
+# Problem set 6 part 3 - 4
 #
-# Problem #4: Playing a hand
+def get_words_to_points(word_list):
+    """
+    Return a dict that maps every word in word_list to its point value.
+    """
+    
+    for word in word_list:
+        POINTS_DICT[word] = get_word_score(word, HAND_SIZE)
+
+    return(POINTS_DICT)
+
+    
+
+def get_time_limit(POINTS_DICT, k):
+    """
+    Return the time limit for the computer player as a function of the
+    multiplier k.
+    points_dict should be the same dictionary that is created by
+    get_words_to_points.
+     """
+
+    start_time = time.time()
+    
+    # Do some computation. The only purpose of the computation is so we can
+    # figure out how long your computer takes to perform a known task.
+    for word in POINTS_DICT:
+        get_frequency_dict(word)
+        get_word_score(word, HAND_SIZE)
+
+    end_time = time.time()
+
+    return((end_time - start_time) * k)
+
+
+
+def pick_best_word(hand, POINTS_DICT):
+    """
+    Return the highest scoring word from points_dict that can be made with the
+    given hand.
+    Return '.' if no words can be made with the given hand.
+    """
+    
+    bestWord         = '.'                      # By default if no word can be formed, it will return exit command
+    currentBestScore = 0
+    
+    for word in POINTS_DICT:
+        hasLetter = 0
+        handDict  = get_frequency_dict(hand)
+        for letter in word:
+            if handDict.get(letter, 0) > 0:     # we don't know if letter in word is in hand so use .get()
+                hasLetter        += 1
+                handDict[letter]  = handDict[letter] - 1
+        
+        if hasLetter == len(word):
+            # Check if the current word yields better score.
+            # If yes, current word is the best word.
+            thisWordScore   = POINTS_DICT[word]
+            if thisWordScore > currentBestScore:
+                bestWord          = word
+                currentBestScore  = thisWordScore
+    
+    return(bestWord)
+
+
+
+# End of Problem 6 part 3 - 4
+# -----------------------------------------------------------------------------
 #
+
+
 def play_hand(hand, word_list):
     """
     Allows the user to play the given hand, as follows:
@@ -227,37 +290,59 @@ def play_hand(hand, word_list):
     """
     # TO DO ...
     
-    scoreThisHand = 0                   # Set/reset the score counter for current hand   
-                     
-    while len(hand) > 0:
-        print()
+##    global TIME_LIMIT   = int(input("Please enter time limit in seconds: "))
+
+    global POINTS_DICT
+    global TIME_LIMIT
+    global k
+    POINTS_DICT  = get_words_to_points(word_list)
+    TIME_LIMIT   = get_time_limit(POINTS_DICT, k)
+
+
+    scoreThisHand       = 0             # Set/reset the score counter for current hand   
+    totalTime           = 0             # Set/reset the timer
+    
+    while sum(hand.values()) > 0:       # While there are points to gain in hand
+
         print("Current hand:")
         display_hand(hand)
-        word = input("Please enter the word to play or '.' to quit:")
-
+        
+        # Add timer
+        startTime   = time.time()
+##        word        = input("Please enter the word to play or '.' to quit:")      # User input
+        word        = pick_best_word(hand, POINTS_DICT)     # Computer player
+        endTime     = time.time()
+        totalTime   = endTime - startTime
+        print("It took %0.2d seconds to provide an answer" % totalTime)
+        
         if word == '.':
-            print('End game')
+            print("End game")
+            print("Your total score is %0.2f points" % scoreThisHand)
             break
 
         else:
             # Check if the word is valid, re-enter if not
             if is_valid_word(word, hand, word_list) == False:
-                print("The word %s you entered is invalid." % word)
+                print("The word '%s' you entered is invalid." % word)
 
             else:
-                currentScore = get_word_score(word, HAND_SIZE)
-                print("This word %s gives you %d points" % (word, currentScore))
-                scoreThisHand += currentScore
+                # If the response time exceeds the limit, the score will not count
+                if totalTime <= TIME_LIMIT:
+                    currentScore = get_word_score(word, HAND_SIZE) / totalTime
+                    print("This word '%s' gives you %0.2f points" % (word, currentScore))
+                    scoreThisHand += currentScore
+                    
+                else:
+                    print("Total Time exceeds %d seconds. Your score is %0.2f points" % (TIME_LIMIT, scoreThisHand))
+                    break
+
                 hand = update_hand(hand, word)
+                
     
-    print("Score in this hand:", scoreThisHand)
-
+    print("Total score in this hand: %0.2f" % scoreThisHand)
     
 
-#
-# Problem #5: Playing a game
-# Make sure you understand how this code works!
-# 
+
 def play_game(word_list):
     """
     Allow the user to play an arbitrary number of hands.
