@@ -63,34 +63,36 @@ def get_frequency_dict(sequence):
 # (end of helper code)
 # -----------------------------------
 
-
-def get_word_score(word, n):
-    """
-    Returns the score for a word. Assumes the word is a
-    valid word.
-
-    The score for a word is the sum of the points for letters
-    in the word, plus 50 points if all n letters are used on
-    the first go.
-
-    Letters are scored as in Scrabble; A is worth 1, B is
-    worth 3, C is worth 3, D is worth 2, E is worth 1, and so on.
-
-    word: string (lowercase letters)
-    returns: int >= 0
-    """
-    # TO DO ...
-    
-    wordScore = 0
-    for letter in word:
-        wordScore += SCRABBLE_LETTER_VALUES[letter]
-    
-    # for bonus jackpot
-    if len(word) == n:
-        wordScore +=50
-
-    return(wordScore)
-
+## -----------------------------------------------------------------------------
+## Not used in this problem
+##
+##def get_word_score(word, n):
+##    """
+##    Returns the score for a word. Assumes the word is a
+##    valid word.
+##
+##    The score for a word is the sum of the points for letters
+##    in the word, plus 50 points if all n letters are used on
+##    the first go.
+##
+##    Letters are scored as in Scrabble; A is worth 1, B is
+##    worth 3, C is worth 3, D is worth 2, E is worth 1, and so on.
+##
+##    word: string (lowercase letters)
+##    returns: int >= 0
+##    """
+##    # TO DO ...
+##    
+##    wordScore = 0
+##    for letter in word:
+##        wordScore += SCRABBLE_LETTER_VALUES[letter]
+##    
+##    # for bonus jackpot
+##    if len(word) == n:
+##        wordScore +=50
+##
+##    return(wordScore)
+## -----------------------------------------------------------------------------
 
 
 def display_hand(hand):
@@ -164,28 +166,29 @@ def update_hand(hand, word):
 
     return(newHand)
 
-
-
-def is_valid_word(word, hand, word_list):
-    """
-    Returns True if word is in the word_list and is entirely
-    composed of letters in the hand. Otherwise, returns False.
-    Does not mutate hand or word_list.
-    
-    word: string
-    hand: dictionary (string -> int)
-    word_list: list of lowercase strings
-    """
-    # TO DO ...
-
-    freq = get_frequency_dict(word)
-
-    for letter in word:
-        if freq[letter] > hand.get(letter, 0):  # Check if there's letter in hand
-           return(False)
-
-    return(word in word_list)                   # Check if the word is in the list
-
+## -----------------------------------------------------------------------------
+## Not used in this problem
+##
+##def is_valid_word(word, hand, word_list):
+##    """
+##    Returns True if word is in the word_list and is entirely
+##    composed of letters in the hand. Otherwise, returns False.
+##    Does not mutate hand or word_list.
+##    
+##    word: string
+##    hand: dictionary (string -> int)
+##    word_list: list of lowercase strings
+##    """
+##    # TO DO ...
+##
+##    freq = get_frequency_dict(word)
+##
+##    for letter in word:
+##        if freq[letter] > hand.get(letter, 0):  # Check if there's letter in hand
+##           return(False)
+##
+##    return(word in word_list)                   # Check if the word is in the list
+## -----------------------------------------------------------------------------
 
 
 # -----------------------------------------------------------------------------
