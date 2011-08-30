@@ -1,0 +1,6 @@
+COURSE: 	CS 6.00 - Intro to Computer Science and Programming
+PROFESSOR:	Prof. Eric Grimson
+		Prof. John Guttag
+SOURCE: 	http://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-00-introduction-to-computer-science-and-programming-fall-2008/
+
+NOTE:		The version of Python use in the course is 2.7; however, since the Python 3.2 is slowly becoming the new stardard, I decided to modify some of the code and completed the assignment under the version 3.2 instead.
